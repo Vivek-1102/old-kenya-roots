@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { TopBar } from '@/components/TopBar';
 import { Navbar } from '@/components/Navbar';
@@ -7,6 +8,7 @@ import { AssetCard } from '@/components/AssetCard';
 import { TradeModal } from '@/components/TradeModal';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Asset, mockAssets } from '@/lib/mockData';
 import { Search, Plus } from 'lucide-react';
 
@@ -14,12 +16,18 @@ export default function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<'All' | 'NSE' | 'Crypto' | 'US Stock'>('All');
   const [tradeModal, setTradeModal] = useState<{ isOpen: boolean; asset: Asset | null; type: 'buy' | 'sell' }>({
     isOpen: false,
     asset: null,
     type: 'buy'
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (!user) {
     navigate('/');
@@ -80,16 +88,43 @@ export default function Home() {
         </div>
 
         {/* Asset List */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredAssets.map((asset) => (
-            <AssetCard
-              key={asset.id}
-              asset={asset}
-              onBuy={handleBuy}
-              onSell={handleSell}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="p-4 border rounded-2xl space-y-3">
+                <Skeleton className="h-4 w-3/4 shimmer" />
+                <Skeleton className="h-8 w-1/2 shimmer" />
+                <Skeleton className="h-4 w-1/3 shimmer" />
+                <div className="flex gap-2 pt-2">
+                  <Skeleton className="h-9 flex-1 shimmer" />
+                  <Skeleton className="h-9 flex-1 shimmer" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <motion.div 
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {filteredAssets.map((asset, index) => (
+              <motion.div
+                key={asset.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <AssetCard
+                  asset={asset}
+                  onBuy={handleBuy}
+                  onSell={handleSell}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
         {filteredAssets.length === 0 && (
           <div className="text-center py-12">

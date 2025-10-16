@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Asset } from '@/lib/mockData';
 import {
   Dialog,
@@ -40,46 +41,53 @@ export const TradeModal = ({ isOpen, onClose, asset, type }: TradeModalProps) =>
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{type === 'buy' ? 'Buy' : 'Sell'} {asset.symbol}</DialogTitle>
-          <DialogDescription>{asset.name}</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label>Current Price</Label>
-            <p className="text-2xl font-bold">
-              {asset.category === 'Crypto' ? '$' : 'KSh'} {asset.price.toLocaleString()}
-            </p>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="amount">Amount (KSh)</Label>
-            <Input
-              id="amount"
-              type="number"
-              placeholder="Enter amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              min="0"
-              step="0.01"
-            />
-          </div>
-          {amount && (
-            <div className="p-3 rounded-lg bg-muted">
-              <p className="text-sm text-muted-foreground">You will {type}</p>
-              <p className="text-lg font-semibold">
-                {(parseFloat(amount) / asset.price).toFixed(6)} {asset.symbol}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          <DialogHeader>
+            <DialogTitle>{type === 'buy' ? 'Buy' : 'Sell'} {asset.symbol}</DialogTitle>
+            <DialogDescription>{asset.name}</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label>Current Price</Label>
+              <p className="text-2xl font-bold">
+                {asset.category === 'Crypto' ? '$' : 'KSh'} {asset.price.toLocaleString()}
               </p>
             </div>
-          )}
-          <div className="flex gap-2">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-              Cancel
-            </Button>
-            <Button type="submit" className="flex-1">
-              Confirm {type === 'buy' ? 'Purchase' : 'Sale'}
-            </Button>
-          </div>
-        </form>
+            <div className="space-y-2">
+              <Label htmlFor="amount">Amount (KSh)</Label>
+              <Input
+                id="amount"
+                type="number"
+                placeholder="Enter amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                min="0"
+                step="0.01"
+              />
+            </div>
+            {amount && (
+              <div className="p-3 rounded-lg bg-muted">
+                <p className="text-sm text-muted-foreground">You will {type}</p>
+                <p className="text-lg font-semibold">
+                  {(parseFloat(amount) / asset.price).toFixed(6)} {asset.symbol}
+                </p>
+              </div>
+            )}
+            <div className="flex gap-2">
+              <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+                Cancel
+              </Button>
+              <Button type="submit" className="flex-1">
+                Confirm {type === 'buy' ? 'Purchase' : 'Sale'}
+              </Button>
+            </div>
+          </form>
+        </motion.div>
       </DialogContent>
     </Dialog>
   );

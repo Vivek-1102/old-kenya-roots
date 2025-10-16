@@ -97,3 +97,29 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+  
+  .pulse {
+    @apply animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite];
+  }
+
+  /* Shimmer effect for loading states */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+  
+  .shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(to right, hsl(var(--muted)) 4%, hsl(var(--muted-foreground) / 0.1) 25%, hsl(var(--muted)) 36%);
+    background-size: 1000px 100%;
+  }
+}
