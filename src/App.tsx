@@ -10,7 +10,13 @@ import Wallet from "./pages/Wallet";
 import Baskets from "./pages/Baskets";
 import Portfolio from "./pages/Portfolio";
 import Profile from "./pages/Profile";
-import Admin from "./pages/Admin";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import PendingBuys from "./pages/admin/PendingBuys";
+import PendingWithdrawals from "./pages/admin/PendingWithdrawals";
+import AssetManager from "./pages/admin/AssetManager";
+import BasketBuilder from "./pages/admin/BasketBuilder";
+import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,7 +36,14 @@ const App = () => (
             <Route path="/baskets" element={<Baskets />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="buys" element={<PendingBuys />} />
+              <Route path="withdrawals" element={<PendingWithdrawals />} />
+              <Route path="assets" element={<AssetManager />} />
+              <Route path="baskets" element={<BasketBuilder />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

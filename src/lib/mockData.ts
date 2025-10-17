@@ -289,5 +289,22 @@ export const mockPendingActions: PendingAction[] = [
     asset: 'BTC',
     amount: 50000,
     date: '2025-10-16T10:00:00'
+  },
+  {
+    id: 'pa4',
+    userId: 'user4',
+    userName: 'Sarah Kamau',
+    type: 'buy',
+    asset: 'SCOM',
+    amount: 8000,
+    date: '2025-10-17T11:20:00'
+  },
+  {
+    id: 'pa5',
+    userId: 'user5',
+    userName: 'Peter Njoroge',
+    type: 'withdraw',
+    amount: 15000,
+    date: '2025-10-17T14:30:00'
   }
 ];
