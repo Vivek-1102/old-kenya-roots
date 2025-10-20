@@ -48,11 +48,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 800));
     
+    // Check if user is admin
+    const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(',') || ['admin@oldmtkenya.com', 'sydney@oldmtkenya.africa'];
+    const isAdmin = adminEmails.includes(email.toLowerCase().trim());
+    
     const mockUser: User = {
       id: 'user_' + Math.random().toString(36).substr(2, 9),
       email,
       name: email.split('@')[0],
-      isAdmin: email === 'admin@oldmtkenya.com'
+      isAdmin
     };
     
     setUser(mockUser);

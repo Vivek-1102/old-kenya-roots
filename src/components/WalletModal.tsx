@@ -21,7 +21,7 @@ interface WalletModalProps {
 export const WalletModal = ({ isOpen, onClose, type }: WalletModalProps) => {
   const [amount, setAmount] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!amount || parseFloat(amount) <= 0) {
@@ -29,16 +29,27 @@ export const WalletModal = ({ isOpen, onClose, type }: WalletModalProps) => {
       return;
     }
 
-    if (type === 'deposit') {
-      toast.success('Redirecting to payment gateway...', {
-        description: 'IntaSend checkout will open shortly'
-      });
-    } else {
-      toast.success('Withdrawal request submitted for approval');
+    try {
+      if (type === 'deposit') {
+        // Mock call - will use initiateDeposit(parseFloat(amount)) when Firebase is connected
+        toast.success('Redirecting to payment gateway...', {
+          description: 'Flutterwave checkout will open shortly'
+        });
+        // const result = await initiateDeposit(parseFloat(amount));
+        // window.location.href = result.checkout_url;
+      } else {
+        // Mock call - will use requestWithdrawal(parseFloat(amount), phone) when Firebase is connected
+        toast.success('Withdrawal request submitted for approval', {
+          description: 'Admin will process within 24 hours'
+        });
+        // await requestWithdrawal(parseFloat(amount), userPhone);
+      }
+      
+      setAmount('');
+      onClose();
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.');
     }
-    
-    setAmount('');
-    onClose();
   };
 
   return (
